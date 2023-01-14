@@ -1,4 +1,4 @@
-package com.springbootrest;
+package com.springbootrest.controllers;
 
 import java.util.concurrent.atomic.AtomicLong;
 
