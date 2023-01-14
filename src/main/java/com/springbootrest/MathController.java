@@ -25,6 +25,74 @@ public class MathController {
 		return sum;
 	}
 
+	@GetMapping("/sub/{numberOne}/{numberTwo}")
+	public Double sub(@PathVariable(value = "numberOne") String numberOne,
+			@PathVariable(value = "numberTwo") String numberTwo) throws Exception {
+
+		if (!isNumeric(numberOne) || !isNumeric(numberTwo)) {
+			throw new UnsupportedMathOperationException("Por favor, insira apenas números!");
+		}
+
+		double sub = convertToDouble(numberOne) - convertToDouble(numberTwo);
+
+		return sub;
+	}
+
+	@GetMapping("/mult/{numberOne}/{numberTwo}")
+	public Double mult(@PathVariable(value = "numberOne") String numberOne,
+			@PathVariable(value = "numberTwo") String numberTwo) throws Exception {
+
+		if (!isNumeric(numberOne) || !isNumeric(numberTwo)) {
+			throw new UnsupportedMathOperationException("Por favor, insira apenas números!");
+		}
+
+		double mult = convertToDouble(numberOne) * convertToDouble(numberTwo);
+
+		return mult;
+	}
+
+	@GetMapping("/div/{numberOne}/{numberTwo}")
+	public Double div(@PathVariable(value = "numberOne") String numberOne,
+			@PathVariable(value = "numberTwo") String numberTwo) throws Exception {
+
+		if (!isNumeric(numberOne) || !isNumeric(numberTwo)) {
+			throw new UnsupportedMathOperationException("Por favor, insira apenas números!");
+		}
+
+		if (convertToDouble(numberTwo) <= 0.0) {
+			throw new UnsupportedMathOperationException("Um número não pode ser dividido por 0.");
+		}
+
+		double div = convertToDouble(numberOne) / convertToDouble(numberTwo);
+
+		return div;
+	}
+
+	@GetMapping("/mean/{numberOne}/{numberTwo}")
+	public Double mean(@PathVariable(value = "numberOne") String numberOne,
+			@PathVariable(value = "numberTwo") String numberTwo) throws Exception {
+
+		if (!isNumeric(numberOne) || !isNumeric(numberTwo)) {
+			throw new UnsupportedMathOperationException("Por favor, insira apenas números!");
+		}
+
+		double mean = (convertToDouble(numberOne) + convertToDouble(numberTwo)) / 2.0;
+
+		return mean;
+	}
+
+	@GetMapping("/sqrroot/{number}")
+	public Double sqrRoot(@PathVariable(value = "number") String number) throws Exception {
+
+		if (!isNumeric(number) || !isNumeric(number)) {
+			throw new UnsupportedMathOperationException("Por favor, insira apenas números!");
+		}
+
+		double mean = convertToDouble(number);
+
+		return Math.sqrt(mean);
+	}
+
 	private Double convertToDouble(String strNumber) {
 		if (strNumber == null) {
 			return 0D;
