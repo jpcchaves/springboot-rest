@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.springbootrest.exceptions.UnsupportedMathOperationException;
+
 @RestController
 public class MathController {
 	public final AtomicLong count = new AtomicLong();
@@ -15,7 +17,7 @@ public class MathController {
 			@PathVariable(value = "numberTwo") String numberTwo) throws Exception {
 
 		if (!isNumeric(numberOne) || !isNumeric(numberTwo)) {
-			throw new Exception();
+			throw new UnsupportedMathOperationException("Por favor, insira apenas números!");
 		}
 
 		double sum = convertToDouble(numberOne) + convertToDouble(numberTwo);
