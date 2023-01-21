@@ -41,6 +41,11 @@
       <groupId>com.github.dozermapper</groupId>
       <version>${dozer.version}</version>
     </dependency>
+    <dependency>
+      <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+      <groupId>org.springdoc</groupId>
+      <version>${springdoc.version}</version>
+    </dependency>
 
     <dependency>
       <artifactId>spring-boot-devtools</artifactId>
@@ -67,6 +72,7 @@
   <properties>
     <dozer.version>6.4.0</dozer.version>
     <java.version>17</java.version>
+    <springdoc.version>2.0.2</springdoc.version>
   </properties>
   <version>0.0.1-SNAPSHOT</version>
 </project>
