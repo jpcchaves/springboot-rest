@@ -1,80 +1,87 @@
 package com.springbootrest.services;
 
-import java.util.List;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
+import com.springbootrest.controllers.PersonController;
 import com.springbootrest.data.vo.v1.PersonVO;
-import com.springbootrest.data.vo.v2.PersonVO2;
 import com.springbootrest.exceptions.ResourceNotFoundException;
 import com.springbootrest.mapper.DozerMapper;
 import com.springbootrest.mapper.custom.PersonMapper;
 import com.springbootrest.model.Person;
 import com.springbootrest.repositories.PersonRepository;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 
 @Service
 public class PersonServices {
 
-	@Autowired
-	PersonRepository personRepository;
+  @Autowired
+  PersonRepository personRepository;
 
-	@Autowired
-	PersonMapper mapper;
+  @Autowired
+  PersonMapper mapper;
 
-	public List<PersonVO> findAll() {
-		return DozerMapper.parseListObjects(personRepository.findAll(), PersonVO.class);
-	}
+  public List<PersonVO> findAll() {
+    var persons = DozerMapper.parseListObjects(personRepository.findAll(), PersonVO.class);
 
-	public PersonVO findById(Long id) {
+    persons.stream().forEach(
+        p -> {
+          try {
+            p.add(linkTo(methodOn(PersonController.class).findById(p.getKey())).withSelfRel());
+          } catch (Exception e) {
+            throw new RuntimeException(e);
+          }
+        });
 
-		var entity = personRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Não foi encontrada uma pessoa com o ID informado."));
+    return persons;
+  }
 
-		return DozerMapper.parseObject(entity, PersonVO.class);
+  public PersonVO findById(Long id) throws Exception {
 
-	}
+    var entity = personRepository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException(
+            "Não foi encontrada uma pessoa com o ID informado."));
 
-	public PersonVO createPerson(PersonVO person) {
+    var vo = DozerMapper.parseObject(entity, PersonVO.class);
 
-		var entity = DozerMapper.parseObject(person, Person.class);
+    vo.add(linkTo(methodOn(PersonController.class).findById(id)).withSelfRel());
+    return vo;
+  }
 
-		var vo = DozerMapper.parseObject(personRepository.save(entity), PersonVO.class);
+  public PersonVO createPerson(PersonVO person) throws Exception {
+    var entity = DozerMapper.parseObject(person, Person.class);
+    var vo = DozerMapper.parseObject(personRepository.save(entity), PersonVO.class);
+    vo.add(linkTo(methodOn(PersonController.class).findById(vo.getKey())).withSelfRel());
 
-		return vo;
-	}
+    return vo;
+  }
 
-	public PersonVO2 createPersonVO2(PersonVO2 person) {
-		var entity = mapper.convertVoToEntity(person);
+  public PersonVO updatePerson(PersonVO person) {
 
-		var vo = mapper.convertEntityToVo(personRepository.save(entity));
+    var entity = personRepository.findById(person.getKey())
+        .orElseThrow(() -> new ResourceNotFoundException(
+            "Não foi encontrada uma pessoa com o ID informado."));
 
-		return vo;
-	}
+    entity.setFirstName(person.getFirstName());
+    entity.setLastName(person.getLastName());
+    entity.setAddress(person.getAddress());
+    entity.setGender(person.getGender());
 
-	public PersonVO updatePerson(PersonVO person) {
+    var vo = DozerMapper.parseObject(personRepository.save(entity), PersonVO.class);
 
-		var entity = personRepository.findById(person.getId())
-				.orElseThrow(() -> new ResourceNotFoundException("Não foi encontrada uma pessoa com o ID informado."));
+    return vo;
+  }
 
-		entity.setFirstName(person.getFirstName());
-		entity.setLastName(person.getLastName());
-		entity.setAddress(person.getAddress());
-		entity.setGender(person.getGender());
+  public void deletePerson(Long id) {
 
-		var vo = DozerMapper.parseObject(personRepository.save(entity), PersonVO.class);
+    var entity = personRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(
+        "Não foi possível deletar a pessoa porque o ID informado não foi encontrado"));
 
-		return vo;
-	}
+    personRepository.delete(entity);
 
-	public void deletePerson(Long id) {
-
-		var entity = personRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(
-				"Não foi possível deletar a pessoa porque o ID informado não foi encontrado"));
-
-		personRepository.delete(entity);
-		;
-
-	}
+  }
 
 }
