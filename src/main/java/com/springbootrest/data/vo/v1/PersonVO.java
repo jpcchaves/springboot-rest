@@ -1,10 +1,14 @@
 package com.springbootrest.data.vo.v1;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import jakarta.persistence.Id;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 
+@JsonPropertyOrder({"id", "address", "firstName", "lastName", "gender", "birthDay"})
 public class PersonVO implements Serializable {
 
   @Serial
@@ -12,9 +16,13 @@ public class PersonVO implements Serializable {
 
   @Id
   long id;
+
+  @JsonProperty("first_name_JSONPROPERTY")
   private String firstName;
   private String lastName;
   private String address;
+
+  @JsonIgnore
   private String gender;
 
   public PersonVO() {
