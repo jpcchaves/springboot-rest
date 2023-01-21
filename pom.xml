@@ -46,7 +46,14 @@
       <groupId>org.springdoc</groupId>
       <version>${springdoc.version}</version>
     </dependency>
-
+    <dependency>
+      <artifactId>spring-boot-starter-validation</artifactId>
+      <groupId>org.springframework.boot</groupId>
+    </dependency>
+    <dependency>
+      <artifactId>spring-boot-starter-validation</artifactId>
+      <groupId>org.springframework.boot</groupId>
+    </dependency>
     <dependency>
       <artifactId>spring-boot-devtools</artifactId>
       <groupId>org.springframework.boot</groupId>
@@ -58,6 +65,7 @@
       <groupId>org.springframework.boot</groupId>
       <scope>test</scope>
     </dependency>
+
   </dependencies>
   <description>Demo project for Spring Boot</description>
   <groupId>com.springboot-rest</groupId>
