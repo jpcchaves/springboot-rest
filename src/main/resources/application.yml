@@ -11,4 +11,6 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
       show-sql: false
-spring-doc.pathsToMatch: /person/**
+  devtools:
+    livereload: false
+spring-doc.pathsToMatch: /person/**, /book/**
